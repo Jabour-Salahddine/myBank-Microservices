@@ -1,0 +1,23 @@
+
+spring:
+  application:
+    name: "configserver"
+  profiles:
+    # active: native
+    active: git
+  cloud:
+    config:
+      server:
+        # native:
+        # search-locations: "classpath:/config"
+        # search-locations: "file:///User...."
+        git:
+          uri: "https://github.com/Jabour-Salahddine/myBank-config.git"
+          default-label: master
+          timeout: 5
+          clone-on-start: true
+          force-pull: true
+
+
+server:
+  port: 8071
