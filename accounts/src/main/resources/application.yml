@@ -24,6 +24,14 @@ spring:
   config:
     import: "optional:configserver:http://localhost:8071/"
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# testing the refresh configurations at runtime using refresh actuator path, the same is in all microservices
+
 springdoc:
   swagger-ui:
     path: /docs
