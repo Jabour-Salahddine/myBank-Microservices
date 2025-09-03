@@ -121,15 +121,29 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<!-- method with buildpacks to create docker image -->
+					<!--
 					<image>
 						<name>jsalahddine/${project.artifactId}:v1</name>
 					</image>
+					-->
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<!-- method with jib to create docker image -->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.2</version>
+				<configuration>
+					<to>
+						<image>jsalahddine/${project.artifactId}:v2</image>
+					</to>
 				</configuration>
 			</plugin>
 		</plugins>

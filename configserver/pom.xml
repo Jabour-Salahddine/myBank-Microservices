@@ -11,6 +11,7 @@
 	<groupId>com.mybank</groupId>
 	<artifactId>configserver</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>configserver</name>
 	<description>config server for mybank microservices</description>
 	<url/>
@@ -75,6 +76,16 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.2</version>
+				<configuration>
+					<to>
+						<image>jsalahddine/${project.artifactId}:v2</image>
+					</to>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
