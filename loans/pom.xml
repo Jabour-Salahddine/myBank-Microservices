@@ -66,9 +66,8 @@
 			<scope>runtime</scope>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
+		<dependency> <groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -142,7 +141,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>jsalahddine/${project.artifactId}:v2</image>
+						<image>jsalahddine/${project.artifactId}:v3</image>
 					</to>
 				</configuration>
 			</plugin>
