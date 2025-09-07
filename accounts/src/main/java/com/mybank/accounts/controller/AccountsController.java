@@ -38,7 +38,7 @@ import org.springframework.core.env.Environment;
 )
 public class AccountsController {
 
-    private final IAccountsService accountService; // injection is done auto by the @AllArgsConstructor annotation
+    private final IAccountsService accountService; // injection is done auto by the @AllArgsConstructor annotation. it's final because we want to make sure that the service is not null
 
     public AccountsController(AccountsServiceImpl accountService) {
         this.accountService = accountService;

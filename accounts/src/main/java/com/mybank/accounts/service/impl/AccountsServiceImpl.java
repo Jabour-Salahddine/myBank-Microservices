@@ -23,7 +23,7 @@ import java.util.Random;
 @AllArgsConstructor // because we have juste one constructor, no need to write it, it's automatically generated with arguments that we have in the class
 public class AccountsServiceImpl implements IAccountsService {
 
-    private AccountsRepository accountsRepository;
+    private  AccountsRepository accountsRepository;
     private CustomerRepository customerRepository;
 
 
