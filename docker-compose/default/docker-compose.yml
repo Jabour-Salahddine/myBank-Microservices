@@ -1,34 +1,5 @@
 services:
-  accountsdb:
-    container_name: accountsdb
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_DATABASE: accountsdb
-    extends:
-      file: common-configuration.yml
-      service: microservice-db-config
 
-  loansdb:
-    container_name: loansdb
-    ports:
-      - 3307:3306
-    environment:
-      MYSQL_DATABASE: loansdb
-    extends:
-      file: common-configuration.yml
-      service: microservice-db-config
-
-  cardsdb:
-    container_name: cardsdb
-    ports:
-      - 3308:3306
-    environment:
-      MYSQL_DATABASE: cardsdb
-    extends:
-      file: common-configuration.yml
-      service: microservice-db-config
-  
   rabbit:
     image: rabbitmq:3.13-management
     hostname: rabbitmq
@@ -46,7 +17,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "jsalahddine/configserver:v3"
+    image: "jsalahddine/configserver:v5"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -63,56 +34,74 @@ services:
       file: common-configuration.yml
       service: microservice-base-config
 
+  eurekaserver:
+    image: "jsalahddine/eurekaserver:v5"
+    container_name: eurekaserver-ms
+    ports:
+      - "8070:8070"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    extends:
+      file: common-configuration.yml
+      service: microservice-configserver-config
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver"
+
+
   accounts:
-    image: "jsalahddine/accounts:v3"
+    image: "jsalahddine/accounts:v5"
     container_name: accounts-ms
     ports:
       - "8080:8080"
     depends_on:
       configserver:
         condition: service_healthy
-      accountsdb:
+      eurekaserver:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "accounts"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
     extends:
       file: common-configuration.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
   loans:
-    image: "jsalahddine/loans:v3"
+    image: "jsalahddine/loans:v5"
     container_name: loans-ms
     ports:
       - "8090:8090"
     depends_on:
       configserver:
         condition: service_healthy
-      loansdb:
+      eurekaserver:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "loans"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
     extends:
       file: common-configuration.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
   cards:
-    image: "jsalahddine/cards:v3"
+    image: "jsalahddine/cards:v5"
     container_name: cards-ms
     ports:
       - "9000:9000"
     depends_on:
       configserver:
         condition: service_healthy
-      cardsdb:
+      eurekaserver:
         condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cards"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
     extends:
       file: common-configuration.yml
-      service: microservice-configserver-config
+      service: microservice-eureka-config
 
 
 networks:

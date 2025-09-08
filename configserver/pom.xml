@@ -83,7 +83,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>jsalahddine/${project.artifactId}:v3</image>
+						<image>jsalahddine/${project.artifactId}:v5</image>
 					</to>
 				</configuration>
 			</plugin>
