@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    gateway:  # we are telling spring cloud gateway to use service discovery to make routing decisions
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    gateway:
+      access: unrestricted
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: "gatewayserver"
+    description: "myBank Gateway Server Application"
+    version: "3.0.0"
