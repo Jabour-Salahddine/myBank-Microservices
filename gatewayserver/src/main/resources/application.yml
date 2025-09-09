@@ -9,7 +9,8 @@ spring:
         webflux:
           discovery:
             locator:
-              enabled: true
+              enabled: false # we are disabling the default routing behavior, those routes taken from service discovery. those routes are created manually in Getwayserverapplication.java
+              lower-case-service-id: true
 
 
 management:
