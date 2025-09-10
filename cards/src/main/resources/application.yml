@@ -62,3 +62,10 @@ info:  # info endpoint data at /actuator/info (this path is unabled so that's wh
 springdoc:
   swagger-ui:
     path: /docs
+
+
+logging:
+  level:
+    com:
+      mybank:
+        cards: DEBUG
