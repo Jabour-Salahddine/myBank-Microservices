@@ -11,7 +11,9 @@ spring:
             locator:
               enabled: false # we are disabling the default routing behavior, those routes taken from service discovery. those routes are created manually in Getwayserverapplication.java
               lower-case-service-id: true
-
+          httpclient:  # hhtp timeout configuration for micoservices loans and cards were we didn't set cercuit breaker. because cercuit breaker has its own timeout configuration
+            connect-timeout: 1000
+            response-timeout: 3s
 
 management:
   endpoints:
