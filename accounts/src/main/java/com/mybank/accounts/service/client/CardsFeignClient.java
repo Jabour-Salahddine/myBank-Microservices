@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("cards") // the name with it, the microservice is registered in eureka server
+@FeignClient(name="cards", fallback = CardsFallback.class) // the name with it, the microservice is registered in eureka server
 public interface CardsFeignClient {
 
     // the same method parameters as in CardsController in cards microservice, for the method name we can put any name
