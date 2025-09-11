@@ -29,4 +29,5 @@ services:
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
 
-      # we are in God's hands now
+
+      # we are in God's hands

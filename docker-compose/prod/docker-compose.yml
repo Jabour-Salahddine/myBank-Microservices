@@ -17,7 +17,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "jsalahddine/configserver:v5"
+    image: "jsalahddine/configserver:v6"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -35,7 +35,7 @@ services:
       service: microservice-base-config
 
   eurekaserver:
-    image: "jsalahddine/eurekaserver:v5"
+    image: "jsalahddine/eurekaserver:v6"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -56,7 +56,7 @@ services:
 
 
   accounts:
-    image: "jsalahddine/accounts:v5"
+    image: "jsalahddine/accounts:v6"
     container_name: accounts-ms
     ports:
       - "8080:8080"
@@ -65,6 +65,12 @@ services:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "accounts"
     extends:
@@ -72,7 +78,7 @@ services:
       service: microservice-eureka-config
 
   loans:
-    image: "jsalahddine/loans:v5"
+    image: "jsalahddine/loans:v6"
     container_name: loans-ms
     ports:
       - "8090:8090"
@@ -81,6 +87,12 @@ services:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "loans"
     extends:
@@ -88,7 +100,7 @@ services:
       service: microservice-eureka-config
 
   cards:
-    image: "jsalahddine/cards:v5"
+    image: "jsalahddine/cards:v6"
     container_name: cards-ms
     ports:
       - "9000:9000"
@@ -97,8 +109,33 @@ services:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     environment:
       SPRING_APPLICATION_NAME: "cards"
+    extends:
+      file: common-configuration.yml
+      service: microservice-eureka-config
+
+
+  gatewayserver:
+    image: "jsalahddine/gatewayserver:v6"
+    container_name: gatewayserver-ms
+    ports:
+      - "8072:8072"
+    depends_on:
+      accounts:
+        condition: service_healthy
+      loans:
+        condition: service_healthy
+      cards:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayserver"
     extends:
       file: common-configuration.yml
       service: microservice-eureka-config
