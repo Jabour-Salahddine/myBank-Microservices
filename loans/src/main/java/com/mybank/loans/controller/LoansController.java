@@ -274,6 +274,7 @@ public class LoansController {
     )
     @GetMapping("/contact-info")
     public ResponseEntity<LoansContactInfoDto> getContactInfo() {
+        logger.debug("Invoked Loans contact-info API to test the retry functionality : reselience4j");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(loansContactInfoDto);
