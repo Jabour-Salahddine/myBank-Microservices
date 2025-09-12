@@ -95,3 +95,15 @@ resilience4j.circuitbreaker:   # already explained in datewayserver's applicatio
       permittedNumberOfCallsInHalfOpenState: 2
       failureRateThreshold: 50
       waitDurationInOpenState: 10000
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 3
+      waitDuration: 100
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      ignoreExceptions:  # with this we can ignore some exceptions from retry mechanism,but always the value of fallback method will be executed and returned, just the mecanism of retry will not be executed when these exceptions are thrown
+        - java.lang.RuntimeException
+      retryExceptions: # with this we can specify which exceptions will be considered for retry mechanism
+        - java.util.concurrent.TimeoutException

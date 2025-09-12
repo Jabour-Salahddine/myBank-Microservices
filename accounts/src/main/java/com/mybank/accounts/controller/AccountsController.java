@@ -8,6 +8,7 @@ import com.mybank.accounts.dto.ErrorResponseDto;
 import com.mybank.accounts.dto.ResponseDto;
 import com.mybank.accounts.service.IAccountsService;
 import com.mybank.accounts.service.impl.AccountsServiceImpl;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +18,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,6 +41,7 @@ import org.springframework.core.env.Environment;
 )
 public class AccountsController {
 
+    private static final Logger logger = LoggerFactory.getLogger(AccountsController.class);
     private final IAccountsService accountService; // injection is done auto by the @AllArgsConstructor annotation. it's final because we want to make sure that the service is not null
 
     public AccountsController(AccountsServiceImpl accountService) {
@@ -230,6 +234,7 @@ public class AccountsController {
             )
     }
     )
+
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo() {
         return ResponseEntity
@@ -255,12 +260,25 @@ public class AccountsController {
             )
     }
     )
+    @Retry(name = "getJavaVersion",fallbackMethod = "getJavaVersionFallback")
     @GetMapping("/java-version")
     public ResponseEntity<String> getJavaVersion() {
+        logger.debug("getJavaVersion() method Invoked!");
+       // throw new RuntimeException("Simulated exception to demonstrate Resilience4j Retry mechanism");
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(environment.getProperty("JAVA_HOME"));
+
     }
+    public ResponseEntity<String> getJavaVersionFallback(Throwable throwable) {
+        logger.error("getJavaVersionFallback() method Invoked due to: {}", throwable.toString());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Fallback response: Unable to fetch JAVAVersion inside accounts mecro at the moment. Please try again later.");
+    }
+
+
 
     @Operation(
             summary = "Get Contact Info",
