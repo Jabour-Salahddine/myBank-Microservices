@@ -8,6 +8,7 @@ import com.mybank.accounts.dto.ErrorResponseDto;
 import com.mybank.accounts.dto.ResponseDto;
 import com.mybank.accounts.service.IAccountsService;
 import com.mybank.accounts.service.impl.AccountsServiceImpl;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -234,12 +235,19 @@ public class AccountsController {
             )
     }
     )
-
+    @RateLimiter(name= "getBuildInfo", fallbackMethod = "getBuildInfoFallback")
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(buildVersion);
+    }
+
+    public ResponseEntity<String> getBuildInfoFallback(Throwable throwable) {
+        logger.error("getBuildInfoFallback() method Invoked due to: {}", throwable.toString());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("Fallback response: Unable to fetch Build Version inside accounts mecro at the moment. Please try again later.");
     }
 
     @Operation(

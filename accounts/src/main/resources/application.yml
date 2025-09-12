@@ -107,3 +107,10 @@ resilience4j.retry:
         - java.lang.RuntimeException
       retryExceptions: # with this we can specify which exceptions will be considered for retry mechanism
         - java.util.concurrent.TimeoutException
+
+resilience4j.ratelimiter:
+  configs:  # the configuration inside a spring microservice is deffirent from the configuration in api-gateway microservice. the conf here is for all users of the microservice
+    default:  # explanation of the example : in every 5 seconds only 1 call will be allowed, if more calls are made in this period of time then the fallback method will be executed
+      timeoutDuration: 1000  # explaination : the time a thread should wait for permission ms
+      limitRefreshPeriod: 5000 # explaination : the period of time after which the rate limiter limit will be refreshed ms
+      limitForPeriod: 1 # explaination : the number of calls that can be made in the limitRefreshPeriod

@@ -47,15 +47,18 @@ public class GatewayserverApplication {
 						.path("/mybank/cards/**")
 						.filters( f -> f.rewritePath("/mybank/cards/(?<segment>.*)","/${segment}")
 								.addResponseHeader("X-ResponseTime", LocalDateTime.now().toString())
+								/*
 								.requestRateLimiter( r -> r.setRateLimiter(redisRateLimiter())
-										.setKeyResolver(KeyResolver())))
+										.setKeyResolver(KeyResolver()))*/
+										)
+
 						.uri("lb://CARDS")).build();
 
 
 	}
 
 
-
+    /*
 	@Bean
 	public RedisRateLimiter redisRateLimiter() {
 		return new RedisRateLimiter(1, 1, 1);
@@ -66,6 +69,8 @@ public class GatewayserverApplication {
 		return exchange -> Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst("username"))
 				.defaultIfEmpty("incognito");
 	}
+	*/
+
 
 
 
