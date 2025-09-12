@@ -2,11 +2,14 @@ package com.mybank.gatewayserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
+import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 
 import org.springframework.http.HttpMethod;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -43,10 +46,25 @@ public class GatewayserverApplication {
 				.route(p -> p
 						.path("/mybank/cards/**")
 						.filters( f -> f.rewritePath("/mybank/cards/(?<segment>.*)","/${segment}")
-								.addResponseHeader("X-ResponseTime", LocalDateTime.now().toString()))
+								.addResponseHeader("X-ResponseTime", LocalDateTime.now().toString())
+								.requestRateLimiter( r -> r.setRateLimiter(redisRateLimiter())
+										.setKeyResolver(KeyResolver())))
 						.uri("lb://CARDS")).build();
 
 
+	}
+
+
+
+	@Bean
+	public RedisRateLimiter redisRateLimiter() {
+		return new RedisRateLimiter(1, 1, 1);
+	}
+
+	@Bean
+	KeyResolver KeyResolver() {
+		return exchange -> Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst("username"))
+				.defaultIfEmpty("incognito");
 	}
 
 

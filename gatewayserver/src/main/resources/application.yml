@@ -14,6 +14,14 @@ spring:
           httpclient:  # hhtp timeout configuration for micoservices loans and cards were we didn't set cercuit breaker. because cercuit breaker has its own timeout configuration
             connect-timeout: 1000
             response-timeout: 3s
+  data:
+    redis:  # redis configuration for rate limiting
+      connect-timeout: 2s
+      host: localhost
+      port: 6379
+      timeout: 1s
+
+
 
 management:
   endpoints:
