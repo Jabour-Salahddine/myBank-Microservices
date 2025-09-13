@@ -17,7 +17,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "jsalahddine/configserver:v6"
+    image: "jsalahddine/configserver:v7"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -35,7 +35,7 @@ services:
       service: microservice-base-config
 
   eurekaserver:
-    image: "jsalahddine/eurekaserver:v6"
+    image: "jsalahddine/eurekaserver:v7"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -56,7 +56,7 @@ services:
 
 
   accounts:
-    image: "jsalahddine/accounts:v6"
+    image: "jsalahddine/accounts:v7"
     container_name: accounts-ms
     ports:
       - "8080:8080"
@@ -78,7 +78,7 @@ services:
       service: microservice-eureka-config
 
   loans:
-    image: "jsalahddine/loans:v6"
+    image: "jsalahddine/loans:v7"
     container_name: loans-ms
     ports:
       - "8090:8090"
@@ -100,7 +100,7 @@ services:
       service: microservice-eureka-config
 
   cards:
-    image: "jsalahddine/cards:v6"
+    image: "jsalahddine/cards:v7"
     container_name: cards-ms
     ports:
       - "9000:9000"
@@ -123,7 +123,7 @@ services:
 
 
   gatewayserver:
-    image: "jsalahddine/gatewayserver:v6"
+    image: "jsalahddine/gatewayserver:v7"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
