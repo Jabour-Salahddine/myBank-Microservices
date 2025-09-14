@@ -14,7 +14,7 @@ spring:
         git:
           uri: "https://github.com/Jabour-Salahddine/myBank-config.git"
           default-label: master
-          timeout: 5
+          timeout: 20
           clone-on-start: true
           force-pull: true
 
