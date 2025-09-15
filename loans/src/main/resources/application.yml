@@ -48,6 +48,9 @@ management:
   info: # enabling info endpoint
    env:
     enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 
 eureka:   # for connecting to eureka server

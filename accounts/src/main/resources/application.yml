@@ -57,6 +57,9 @@ management:
   info:   # enabling info endpoint
     env:
       enabled: true
+  metrics: # to regroup all the metrics under one tag(application name) in prometheus, otherwise we will know for each microservice the metrics realeted to it
+    tags:
+      application: ${spring.application.name}
 
 # testing the refresh configurations at runtime using refresh actuator path, the same is in all microservices
 
