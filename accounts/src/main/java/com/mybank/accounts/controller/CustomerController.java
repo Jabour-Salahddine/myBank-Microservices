@@ -60,8 +60,9 @@ public class CustomerController {
     public ResponseEntity<CustomerDetailsDto> fetchCustomerDetails(@RequestHeader("mybank-correlation-id") String correlationId,
                                                                    @RequestParam @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits") String mobileNumber){
 
-        logger.debug("myBank-correlation-id found: {} ", correlationId);
+        logger.debug("fetchCustomerDetails method start right now baby !");
         CustomerDetailsDto customerDetailsDto = iCustomersService.fetchCustomerDetails(mobileNumber, correlationId);
+        logger.debug("fetchCustomerDetails method end right now baby !");
         return ResponseEntity.status(HttpStatus.SC_OK).body(customerDetailsDto);
 
     }
