@@ -239,7 +239,7 @@ services:
 
 
   configserver:
-    image: "jsalahddine/configserver:v7"
+    image: "jsalahddine/configserver:v8"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -258,8 +258,23 @@ services:
     environment:
       OTEL_SERVICE_NAME: "configserver"
 
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.7
+    container_name: keycloak
+    ports:
+      - "7080:8080"
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+    command: "start-dev"  # Use start-dev for development mode to enable features like in-memory database
+    extends:
+      file: common-configuration.yml
+      service: network-deploy-service
+
+
   eurekaserver:
-    image: "jsalahddine/eurekaserver:v7"
+    image: "jsalahddine/eurekaserver:v8"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -281,10 +296,8 @@ services:
 
 
   accounts:
-    image: "jsalahddine/accounts:v7"
+    image: "jsalahddine/accounts:v8"
     container_name: accounts-ms
-    ports:
-      - "8080:8080"
     depends_on:
       configserver:
         condition: service_healthy
@@ -304,10 +317,8 @@ services:
       service: microservice-eureka-config
 
   loans:
-    image: "jsalahddine/loans:v7"
+    image: "jsalahddine/loans:v8"
     container_name: loans-ms
-    ports:
-      - "8090:8090"
     depends_on:
       configserver:
         condition: service_healthy
@@ -327,10 +338,8 @@ services:
       service: microservice-eureka-config
 
   cards:
-    image: "jsalahddine/cards:v7"
+    image: "jsalahddine/cards:v8"
     container_name: cards-ms
-    ports:
-      - "9000:9000"
     depends_on:
       configserver:
         condition: service_healthy
@@ -351,7 +360,7 @@ services:
 
 
   gatewayserver:
-    image: "jsalahddine/gatewayserver:v7"
+    image: "jsalahddine/gatewayserver:v8"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
@@ -365,6 +374,7 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "gatewayserver"
       OTEL_SERVICE_NAME: "gatewayserver"
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
     extends:
       file: common-configuration.yml
       service: microservice-eureka-config
