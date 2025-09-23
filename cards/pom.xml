@@ -151,7 +151,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>jsalahddine/${project.artifactId}:v7</image>
+						<image>jsalahddine/${project.artifactId}:v8</image>
 					</to>
 				</configuration>
 			</plugin>
