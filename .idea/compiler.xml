@@ -10,6 +10,7 @@
         <module name="eurekaserver" />
         <module name="gatewayserver" />
         <module name="configserver" />
+        <module name="eventsender" />
       </profile>
       <profile name="Annotation profile for loans" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -31,6 +32,7 @@
       <module name="cards" options="-parameters" />
       <module name="configserver" options="-parameters" />
       <module name="eurekaserver" options="-parameters" />
+      <module name="eventsender" options="-parameters" />
       <module name="gatewayserver" options="-parameters" />
       <module name="loans" options="-parameters" />
     </option>
