@@ -37,7 +37,10 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
-
+    stream:
+      bindings:
+        accounts-out-0:
+          destination: queue-communication
 management:
   endpoints:
     web:

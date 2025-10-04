@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
 
 public class KeycloakRoleConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+
 
     @Override
     public Collection<GrantedAuthority> convert(Jwt source) {

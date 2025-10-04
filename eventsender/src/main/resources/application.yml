@@ -9,3 +9,18 @@ spring:
       function:
         definition: email|sms
 
+      stream:
+        bindings:
+          emailsms-in-0:
+            destination: queue-communication
+            group: ${spring.application.name}
+          emailsms-out-0:
+            destination: communication-queue
+
+    rabbitmq:
+      host: localhost
+      port: 5672
+      username: guest
+      password: guest
+      connection-timeout: 10s
+

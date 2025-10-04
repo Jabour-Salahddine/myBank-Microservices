@@ -2,6 +2,7 @@ package com.mybank.accounts.service.impl;
 
 import com.mybank.accounts.constants.AccountsConstants;
 import com.mybank.accounts.dto.AccountsDto;
+import com.mybank.accounts.dto.AccountsMsgDto;
 import com.mybank.accounts.dto.CustomerDto;
 import com.mybank.accounts.entity.Accounts;
 import com.mybank.accounts.entity.Customer;
@@ -13,18 +14,25 @@ import com.mybank.accounts.repository.AccountsRepository;
 import com.mybank.accounts.repository.CustomerRepository;
 import com.mybank.accounts.service.IAccountsService;
 import lombok.AllArgsConstructor;
+
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
 @AllArgsConstructor // because we have juste one constructor, no need to write it, it's automatically generated with arguments that we have in the class
 public class AccountsServiceImpl implements IAccountsService {
 
+    private static final Logger log = LoggerFactory.getLogger(AccountsServiceImpl.class);
+
     private  AccountsRepository accountsRepository;
     private CustomerRepository customerRepository;
+    private final StreamBridge streamBridge;
 
 
 
@@ -47,9 +55,10 @@ public class AccountsServiceImpl implements IAccountsService {
             );
         }
 
-        customerRepository.save(customer);
-        accountsRepository.save(createNewAccount(customer));
+        Customer addedCustomer = customerRepository.save(customer);
+        Accounts addedAccount=accountsRepository.save(createNewAccount(customer));
 
+        queueCommunication(addedAccount, addedCustomer);
     }
 
 
@@ -141,5 +150,18 @@ public class AccountsServiceImpl implements IAccountsService {
         return "Accounts Service is up and running!";
     }
 
+
+    /************* for event driven microservices *************/
+
+
+    private void queueCommunication(Accounts account, Customer customer) {
+        AccountsMsgDto accountsMsgDto = new AccountsMsgDto(customer.getMobileNumber(), customer.getName(),
+                customer.getEmail(), account.getAccountNumber());
+
+        log.info("Besmilah : Communication request for the details: {}", accountsMsgDto);
+
+        Boolean result = streamBridge.send("accounts-out-0", accountsMsgDto);
+        log.info("Wach Communication request successfully triggered ? : {}", result);
+    }
 
 }
