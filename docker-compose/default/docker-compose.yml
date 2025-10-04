@@ -239,7 +239,7 @@ services:
 
 
   configserver:
-    image: "jsalahddine/configserver:v8"
+    image: "jsalahddine/configserver:v9"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -274,7 +274,7 @@ services:
 
 
   eurekaserver:
-    image: "jsalahddine/eurekaserver:v8"
+    image: "jsalahddine/eurekaserver:v9"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -296,12 +296,14 @@ services:
 
 
   accounts:
-    image: "jsalahddine/accounts:v8"
+    image: "jsalahddine/accounts:v9"
     container_name: accounts-ms
     depends_on:
       configserver:
         condition: service_healthy
       eurekaserver:
+        condition: service_healthy
+      rabbit:
         condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
@@ -312,12 +314,13 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "accounts"
       OTEL_SERVICE_NAME: "accounts"
+      SPRING_RABBITMQ_HOST: "rabbit"
     extends:
       file: common-configuration.yml
       service: microservice-eureka-config
 
   loans:
-    image: "jsalahddine/loans:v8"
+    image: "jsalahddine/loans:v9"
     container_name: loans-ms
     depends_on:
       configserver:
@@ -338,7 +341,7 @@ services:
       service: microservice-eureka-config
 
   cards:
-    image: "jsalahddine/cards:v8"
+    image: "jsalahddine/cards:v9"
     container_name: cards-ms
     depends_on:
       configserver:
@@ -360,7 +363,7 @@ services:
 
 
   gatewayserver:
-    image: "jsalahddine/gatewayserver:v8"
+    image: "jsalahddine/gatewayserver:v9"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
@@ -380,6 +383,23 @@ services:
       service: microservice-eureka-config
 
 
+  eventsender:
+    image: "jsalahddine/eventsender:v9"
+    container_name: eventsender-ms
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbit"
+    extends:
+      file: common-configuration.yml
+      service: network-deploy-service
+
+
+
+
 networks:
   mybank:
     driver: "bridge"
+
+    # we are in God's hands , 9t3 lah odoor lkhiir
