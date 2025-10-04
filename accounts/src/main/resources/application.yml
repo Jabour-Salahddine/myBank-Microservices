@@ -37,8 +37,13 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+    function:
+      definition: updateCommunication # the same name as the method in the class dto/streamfunction/AccountsFunction
     stream:
       bindings:
+        updateCommunication-in-0:
+          destination: communication-queue
+          group: ${spring.application.name}
         accounts-out-0:
           destination: queue-communication
 management:

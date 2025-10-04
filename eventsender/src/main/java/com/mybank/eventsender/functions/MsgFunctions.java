@@ -52,18 +52,23 @@ Et Spring Cloud Function permet de chaîner ou router ces fonctions.
     }
 
     @Bean
-    public Function<AccountsMsgDto,String> sms ()
+    public Function<AccountsMsgDto,Long> sms ()
     {
         return accountsMsgDto -> {
             logger.info("sms function called for account: {}", accountsMsgDto.accountNumber());
             // Simulate sending an email
             logger.info("Sending sms to {} at {}", accountsMsgDto.name(), accountsMsgDto.mobileNumber());
             // Return the original message for further processing
-            return accountsMsgDto.mobileNumber(); // Just return the mobile number as a simple response, cause for know we don't have the account number
+            return accountsMsgDto.accountNumber(); // Just return the mobile number as a simple response, cause for know we don't have the account number
         };
     }
 
-
+/*
+* now we are truing to send to accounts microservice a confirmation that the logic has been done,
+* for that we don't need the whole process that we already did in the accounts microservice, just create in yaml file a new binding for the output of this function
+*  that's thanks to spring cloud function that we can do that
+*
+* */
 
 
 

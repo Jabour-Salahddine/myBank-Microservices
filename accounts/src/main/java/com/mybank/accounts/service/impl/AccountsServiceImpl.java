@@ -18,7 +18,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -163,5 +162,18 @@ public class AccountsServiceImpl implements IAccountsService {
         Boolean result = streamBridge.send("accounts-out-0", accountsMsgDto);
         log.info("Wach Communication request successfully triggered ? : {}", result);
     }
+
+
+    @Override
+    public Void ChangeCommunicationStatus(Long accountNumber) {
+        Accounts accounts = accountsRepository.findById(accountNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Account", "AccountNumber", accountNumber.toString())
+        );
+        accounts.setCommunicationStatus(true);
+        accountsRepository.save(accounts);
+       // return true;
+        return null;
+    }
+
 
 }

@@ -14,7 +14,7 @@ spring:
           emailsms-in-0:
             destination: queue-communication
             group: ${spring.application.name}
-          emailsms-out-0:
+          emailsms-out-0: # here we define the output binding
             destination: communication-queue
 
     rabbitmq:

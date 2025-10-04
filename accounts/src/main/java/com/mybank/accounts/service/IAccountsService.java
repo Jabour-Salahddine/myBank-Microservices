@@ -32,6 +32,12 @@ public interface IAccountsService {
      */
     boolean deleteAccount(String mobileNumber);
 
+    /**
+     *
+     * @param accountNumber - Input Account Number
+     * This method will change the communication status to true
+     */
+    Void ChangeCommunicationStatus(Long accountNumber);
 
     String testService();
 
