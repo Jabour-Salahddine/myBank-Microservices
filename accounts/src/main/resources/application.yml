@@ -46,6 +46,14 @@ spring:
           group: ${spring.application.name}
         accounts-out-0:
           destination: queue-communication
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
+
+      default-binder: kafka # to specify which binder to use by default, if we don't specify it then the default binder will be rabbitmq as it is the first one defined in the properties file
+
+
 management:
   endpoints:
     web:

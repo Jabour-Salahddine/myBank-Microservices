@@ -70,7 +70,4 @@ Et Spring Cloud Function permet de chaîner ou router ces fonctions.
 *
 * */
 
-
-
-
 }

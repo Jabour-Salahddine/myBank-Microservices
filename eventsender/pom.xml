@@ -36,11 +36,13 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-stream</artifactId>
 		</dependency>
-		<!-- we are using rabbitmq as message broker -->
+
+		<!-- we are using apache Kafka as message broker -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+			<artifactId>spring-cloud-stream-binder-kafka</artifactId>
 		</dependency>
+
 		<!-- web dependency to create rest endpoint -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
