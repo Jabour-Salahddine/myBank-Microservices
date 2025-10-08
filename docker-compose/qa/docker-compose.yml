@@ -17,6 +17,33 @@ services:
       service: network-deploy-service
 
 
+  broker:
+    image: apache/kafka:4.1.0
+    hostname: broker
+    container_name: broker
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:29092,PLAINTEXT_HOST://broker:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:29093
+      KAFKA_LISTENERS: PLAINTEXT://broker:29092,CONTROLLER://broker:29093,PLAINTEXT_HOST://broker:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    extends:
+      file: common-configuration.yml
+      service: network-deploy-service
+
+
 
   read:
     image: grafana/loki:latest
@@ -239,7 +266,7 @@ services:
 
 
   configserver:
-    image: "jsalahddine/configserver:v9"
+    image: "jsalahddine/configserver:v10"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -274,7 +301,7 @@ services:
 
 
   eurekaserver:
-    image: "jsalahddine/eurekaserver:v9"
+    image: "jsalahddine/eurekaserver:v10"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -296,14 +323,12 @@ services:
 
 
   accounts:
-    image: "jsalahddine/accounts:v9"
+    image: "jsalahddine/accounts:v10"
     container_name: accounts-ms
     depends_on:
       configserver:
         condition: service_healthy
       eurekaserver:
-        condition: service_healthy
-      rabbit:
         condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
@@ -314,13 +339,14 @@ services:
     environment:
       SPRING_APPLICATION_NAME: "accounts"
       OTEL_SERVICE_NAME: "accounts"
-      SPRING_RABBITMQ_HOST: "rabbit"
+      #SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: "broker:9092"
     extends:
       file: common-configuration.yml
       service: microservice-eureka-config
 
   loans:
-    image: "jsalahddine/loans:v9"
+    image: "jsalahddine/loans:v10"
     container_name: loans-ms
     depends_on:
       configserver:
@@ -341,7 +367,7 @@ services:
       service: microservice-eureka-config
 
   cards:
-    image: "jsalahddine/cards:v9"
+    image: "jsalahddine/cards:v10"
     container_name: cards-ms
     depends_on:
       configserver:
@@ -363,7 +389,7 @@ services:
 
 
   gatewayserver:
-    image: "jsalahddine/gatewayserver:v9"
+    image: "jsalahddine/gatewayserver:v10"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
@@ -384,22 +410,18 @@ services:
 
 
   eventsender:
-    image: "jsalahddine/eventsender:v9"
+    image: "jsalahddine/eventsender:v10"
     container_name: eventsender-ms
-    depends_on:
-      rabbit:
-        condition: service_healthy
     environment:
-      SPRING_RABBITMQ_HOST: "rabbit"
+      #SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: "broker:9092"
     extends:
       file: common-configuration.yml
       service: network-deploy-service
-
-
 
 
 networks:
   mybank:
     driver: "bridge"
 
-    # we are in God's hands , 9t3 lah idiir lkhiir
+    # we are in God's hands , 9t3 lah odoor lkhiir

@@ -13,7 +13,7 @@ services:
         limits:
           memory: 700m
     environment:
-      SPRING_RABBITMQ_HOST: "rabbit"
+      SPRING_RABBITMQ_HOST: "rabbit"  # for autoconfiguration we used rabbitmq with spring cloud Bus
       JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.11.0.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4318
       OTEL_METRICS_EXPORTER: none

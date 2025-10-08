@@ -160,7 +160,7 @@
 				<version>3.4.2</version>
 				<configuration>
 					<to>
-						<image>jsalahddine/${project.artifactId}:v9</image>
+						<image>jsalahddine/${project.artifactId}:v10</image>
 					</to>
 				</configuration>
 			</plugin>
